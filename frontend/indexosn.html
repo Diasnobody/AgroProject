@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+     <head>
+          <!-- Обязательные мета-теги -->
+          <meta charset="utf-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+          <!-- Тег заголовка -->
+          <title>Онлайн курсы для сотрудников Алель Агро</title>
+
+          <!-- Font awesome -->
+          <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+          <!-- Animate.css -->
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+          <!-- Normalize -->
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.css">
+
+          <!-- Пользовательский CSS -->
+          <link href="css/styles.css" rel="stylesheet">
+
+          <style>
+               /* Если вы хотите удалить файл astonish.js, обязательно удалите эти стили. */
+               .astonish {
+                    visibility: visible;
+               }
+
+               @media (min-width: 768px) {
+                    .astonish {
+                         visibility: hidden;
+                    }
+                    .animated {
+                         visibility: visible;
+                    }
+               }
+
+               /* Стили для профиля */
+    .notification {
+      background-color: #ffe8cc;
+      border: 1px solid #ffa500;
+      color: #333;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+    #openModalBtn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      outline: none;
+    }
+    #openModalBtn img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid #ffa500;
+      object-fit: cover;
+    }
+    /* Стили для окно профиля, (при открытий окна) */
+    #userModal {
+      display: none; 
+      position: fixed; 
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto; 
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-content-profile {
+      background: #fff;
+      border: 2px solid #ffa500;
+      margin: 60px auto;
+      padding: 30px;
+      width: 350px;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      overflow: visible;
+      animation: slideDown 0.3s;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .close-profile {
+      color: #ffa500;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .edit-icon {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      font-size: 24px;
+      color: #ffa500;
+      cursor: pointer;
+    }
+    .profile-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fff;
+      position: relative;
+      top: -50px;
+      background-color: #ccc;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+    .form-group { margin-bottom: 15px; text-align: left; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ffa500;
+      border-radius: 4px;
+      outline: none;
+    }
+    .status-text {
+      font-size: 16px;
+      padding: 8px;
+      background-color: #fff4e6;
+      border: 1px solid #ffa500;
+      border-radius: 4px;
+    }
+    .btn {
+      padding: 10px 20px;
+      background-color: #ffa500;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+      display: none;
+    }
+    .btn:hover {
+      background-color: #e59400;
+    }
+    .btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .readonly input {
+      border: none;
+      background-color: transparent;
+      pointer-events: none;
+    }
+    .readonly #photoInput {
+      display: none;
+    }
+    .social-share {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .social-share a {
+      color: #ffa500;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+    .history {
+      text-align: left;
+      margin-top: 20px;
+    }
+    .history h4 {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ffa500;
+      padding-bottom: 5px;
+    }
+    .history ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    #adminPanelContainer {
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+    }
+    #adminPanelContainer .btn {
+      display: inline-block;
+    }
+    @media (max-width: 400px) {
+      .modal-content-profile { width: 90%; }
+    }
+    /* Стили для редактирования в профиле */
+    .edit-mode input:not([readonly]) {
+    border: 1px solid #ffa500 !important;
+    background-color: #fff !important;
+    pointer-events: all !important;
+    }
+
+    .edit-mode #photoInput {
+    display: block !important;
+    }
+          </style>
+     </head>
+     <body>
+          <!-- Основная навигация -->
+          <nav class="main-nav" id="main-nav">
+               <div class="content-wrapper-sm">
+                    <a href="#" class="navbar-brand">Алель Агро</a>
+                    <img class="img-absolute" src="img/logo.png" >
+               
+                    <div id="menu-button">
+                         <div class="bar1"></div>
+                         <div class="bar2"></div>
+                         <div class="bar3"></div>
+                    </div>
+                    <ul class="nav-links">
+                      <li><a href="courses.html">Курсы</a></li>
+                         <li><a href="#reserve">База знаний</a></li>
+                         <li><a href="#contact">Контакты</a></li>
+                         <li><button id="openModalBtn" title="Открыть профиль">
+                              <img class="nav-photo1" src="uploads/default_photo.jpg" alt="Фото" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                          </a></li>
+                          <li><a href="" target="_blank">
+                              <img class="nav-photo2" src="img/messege.png" alt="Фото" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                          </a></li>
+                    </ul>
+                    
+               </div> 
+          </nav>
+     
+          <!-- Основной заголовок -->
+          <header>
+               <!-- Первая заменяемая картинка -->
+               
+               <div class="wrapper astonish animated fadeInDown">
+                <!-- class="typewriter" НЕ ТРОГАТЬ, это для анимации текста -->
+                <h1 class="typewriter" data-text="ИННОВАЦИОННЫЙ ПОДХОД"></h1>
+                <h2 class="typewriter" data-text="Современные методики обучения и передовые технологии в агропромышленности."></h2>
+                
+                         <div class="statistics">
+                              <div class="stat-item">
+                                  <div class="icon-circle">
+                                      <img src="img/piple.png" alt="Сотрудники">
+                                  </div>
+                                  <h3><span class="counter" data-target="1000">0</span>+</h3> <!--АНИМАЦИЯ, НЕ ТРОГАТЬ!!! если хотите изменить, изменяйте ОСТОРОЖНО!!!-->>
+                                  <p>Студентов</p>
+                              </div>
+                              <div class="stat-item">
+                                  <div class="icon-circle">
+                                      <img src="img/book.png" alt="Курсы">
+                                  </div>
+                                  <h3><span class="counter" data-target="50">0</span>+</h3> <!--АНИМАЦИЯ, НЕ ТРОГАТЬ!!! если хотите изменить, изменяйте ОСТОРОЖНО!!!-->>
+                                  <p>Курсов</p>
+                              </div>
+                              <div class="stat-item">
+                                  <div class="icon-circle">
+                                      <img src="img/medal.png" alt="Сертификаты">
+                                  </div>
+                                  <h3><span class="counter" data-target="5000">0</span>+</h3> <!--АНИМАЦИЯ, НЕ ТРОГАТЬ!!! если хотите изменить, изменяйте ОСТОРОЖНО!!!-->>
+
+                                  <p>Выданных сертификатов</p>
+                              </div>
+                              <div class="stat-item">
+                                  <div class="icon-circle">
+                                      <img src="img/kb.png" alt="Успех">
+                                  </div>
+                                  <h3><span class="counter" data-target="98">0</span>%</h3> <!--АНИМАЦИЯ, НЕ ТРОГАТЬ!!! если хотите изменить, изменяйте ОСТОРОЖНО!!!-->>
+                                  <p>Процент успешных выпускников</p>
+                              </div>
+                          </div>
+                          <div class="features">
+                              <div class="feature-card">
+                                  <div class="icon-circle">
+                                      <img src="img/lamp.png" alt="Инновационный подход">
+                                  </div>
+                                  <h3>Инновационный подход</h3>
+                                  <p>Современные методики обучения и передовые технологии в агропромышленности.</p>
+                              </div>
+                              <div class="feature-card">
+                                  <div class="icon-circle">
+                                      <img src="img/book.png" alt="Экспертные знания">
+                                  </div>
+                                  <h3>Экспертные знания</h3>
+                                  <p>Курсы разработаны ведущими специалистами отрасли.</p>
+                              </div>
+                              <div class="feature-card">
+                                  <div class="icon-circle">
+                                      <img src="img/target.png" alt="Практический опыт">
+                                  </div>
+                                  <h3>Практический опыт</h3>
+                                  <p>Реальные кейсы и практические задания для закрепления навыков.</p>
+                              </div>
+                              <div class="feature-card">
+                                  <div class="icon-circle">
+                                      <img src="img/roc.png" alt="Карьерный рост">
+                                  </div>
+                                  <h3>Карьерный рост</h3>
+                                  <p>Развитие профессиональных компетенций и возможности для роста.</p>
+                              </div>
+                          </div>
+          </header>
+
+          <!-- Основное содержимое -->
+          <main>
+               <div class="content-wrapper" id="about">
+                    <!-- Вторая заменяемая картинка -->
+                  
+                    <div class="grid">
+                         <div class="grid-col-sm-12 grid-col-md-6 astonish" data-animation="fadeInLeft"> <!--АНИМАЦИЯ, НЕ ТРОГАТЬ!!! если хотите изменить, изменяйте ОСТОРОЖНО!!!-->>
+                           <h2 class="section-title">О Инновации в агропромышленности</h2>
+                           <p>Мы используем передовые технологии и методики обучения для подготовки специалистов будущего</p>
+                           <ul>
+                              <li>Современные методики</li>
+                              <li>Эксперты отрасли</li>
+                            </ul>
+                         </div>
+                         <div class="grid-col-sm-12 grid-col-md-6 animation-container"> <!--АНИМАЦИЯ, НЕ ТРОГАТЬ!!! если хотите изменить, изменяйте ОСТОРОЖНО!!!-->>
+                           <div class="center"></div>
+                           <div class="orbit">
+                             <div class="orbit-item"></div>
+                             <div class="orbit-item"></div>
+                             <div class="orbit-item"></div>
+                             <div class="orbit-item"></div>
+                           </div>
+                         </div>
+                       </div>
+               </div>
+               <div class="features1">
+                    <div class="feature-card1">
+                        <div class="icon-circle">
+                            <img src="img/book.png" alt="Инновационный подход">
+                        </div>
+                        <h3>Современные курсы</h3>
+                        <p>Актуальные знания от ведущих экспертов агропромышленности</p>
+                    </div>
+                    <div class="feature-card1">
+                        <div class="icon-circle">
+                            <img src="img/piple.png" alt="Экспертные знания">
+                        </div>
+                        <h3>Сообщество</h3>
+                        <p>Общение с единомышленниками и обмен опытом</p>
+                    </div>
+                    <div class="feature-card1">
+                        <div class="icon-circle">
+                            <img src="img/kb.png" alt="Практический опыт">
+                        </div>
+                        <h3>Достижения</h3>
+                        <p>Система наград и сертификации для отслеживания прогресса</p>
+                    </div>
+                </div>
+                <div class="features">
+                    <div class="feature-card1">
+                        <div class="icon-circle">
+                            <img src="img/target.png" alt="Инновационный подход">
+                        </div>
+                        <h3>Практические навыки</h3>
+                        <p>Реальные кейсы и задачи из индустрии</p>
+                    </div>
+                    <div class="feature-card1">
+                        <div class="icon-circle">
+                            <img src="img/lamp.png" alt="Экспертные знания">
+                        </div>
+                        <h3>Инновации</h3>
+                        <p>Новейшие технологии и методики в агропромышленности</p>
+                    </div>
+                    <div class="feature-card1">
+                        <div class="icon-circle">
+                            <img src="img/roc.png" alt="Практический опыт">
+                        </div>
+                        <h3>Развитие</h3>
+                        <p>Постоянное обновление контента и новые возможности</p>
+                    </div>
+                </div>
+                <!--Это сделал Диас,"footer" это самый нижний блок сайта, со встроенными Стилями. Если что, изменять здесь-->>
+                <footer id="footer" style="background-color: #333; color: #fff; padding: 40px 0; margin-top: 50px;">
+    <div class="content-wrapper-sm" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1; min-width: 200px;">
+            <h3 style="color: #f9a825;">АЛЛЕЛЬ АГРО</h3>
+            <p>Образовательная платформа для специалистов агропромышленности</p>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+            <h4 style="color: #f9a825;">О нас</h4>
+            <ul style="list-style: none; padding: 0; line-height: 1.8;">
+                <li><a href="#" style="color: #fff; text-decoration: none;">О компании</a></li>
+                <li><a href="#" style="color: #fff; text-decoration: none;">Контакты</a></li>
+                <li><a href="#" style="color: #fff; text-decoration: none;">Карьера</a></li>
+            </ul>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+            <h4 style="color: #f9a825;">Обучение</h4>
+            <ul style="list-style: none; padding: 0; line-height: 1.8;">
+                <li><a href="#" style="color: #fff; text-decoration: none;">Все курсы</a></li>
+                <li><a href="#" style="color: #fff; text-decoration: none;">Преподаватели</a></li>
+                <li><a href="#" style="color: #fff; text-decoration: none;">Расписание</a></li>
+            </ul>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+            <h4 style="color: #f9a825;">Поддержка</h4>
+            <ul style="list-style: none; padding: 0; line-height: 1.8;">
+                <li><a href="#" style="color: #fff; text-decoration: none;">FAQ</a></li>
+                <li><a href="#" style="color: #fff; text-decoration: none;">Помощь</a></li>
+                <li><a href="#" style="color: #fff; text-decoration: none;">Документация</a></li>
+            </ul>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 20px; font-size: 14px; color: #bbb;">
+        <p>&copy; 2025 Аллель Агро. Все права защищены.</p>
+    </div>
+</footer>
+
+
+    <!--Содержимое окна профиля -->
+  <div id="userModal" class="modal">
+    <div class="modal-content-profile readonly" id="modalContent">
+      <span class="close-profile" id="closeModal">&times;</span>
+      <span class="edit-icon" id="editIcon" title="Редактировать профиль">&#9998;</span>
+      <form id="profileForm">
+        <div class="form-group" style="text-align:center;">
+          <img id="profilePhotoPreview" src="uploads/default_photo.jpg" alt="Фото пользователя" class="profile-photo">
+          <br>
+          <input type="file" id="photoInput" accept="image/*" style="display: none;" title="Загрузите фото">
+          <button id="savePhotoButton" class="btn" style="display: none;">Сохранить изменения</button>
+        </div>
+        <div class="form-group">
+          <label for="userName">Имя пользователя:</label>
+          <input type="text" id="userName" name="userName" placeholder="Введите имя" required readonly>
+        </div>
+        <div class="form-group">
+          <label>Статус:</label>
+          <div id="userStatus" class="status-text"></div>
+        </div>
+        <div class="form-group">
+          <label for="coursesCount">Пройдено курсов:</label>
+          <input type="text" id="coursesCount" name="coursesCount" readonly>
+        </div>
+        <div class="form-group">
+          <label>Прогресс обучения:</label>
+          <progress id="courseProgress" value="0" max="100" style="width:100%;"></progress>
+        </div>
+        <div class="social-share">
+          <p>Поделиться профилем:</p>
+          <a href="#" title="Поделиться в Facebook">Facebook</a> |
+          <a href="#" title="Поделиться в Twitter">Twitter</a> |
+          <a href="#" title="Поделиться в LinkedIn">LinkedIn</a>
+        </div>
+        <div class="history">
+          <h4>История изменений</h4>
+          <ul id="historyList"></ul>
+        </div>
+        <button type="submit" class="btn" id="saveProfileBtn">Сохранить изменения</button>
+      </form>
+      <div id="adminPanelContainer">
+        <button id="adminPanelBtn" class="btn">Административная панель</button>
+      </div>
+    </div>
+  </div>
+                <!-- Скрипты размещены внизу для более быстрой загрузки -->
+          <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+          <script src="js/menu.js" charset="utf-8"></script>
+
+          <script src="js/astonish.js" charset="utf-8"></script>
+          <script src="js/nav.js" charset="utf-8"></script>
+          <script src="js/scroll.js" charset="utf-8"></script>
+
+          <!-- Скрипты профиля (РАБОТАЕТ НАПРЯМУЮ С БАЗОЙ, НЕ ТРОГАТЬ!!!) -->
+        <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const openModalBtn = document.getElementById("openModalBtn");
+    const userModal = document.getElementById("userModal");
+    const closeModal = document.getElementById("closeModal");
+    const adminPanelBtn = document.getElementById("adminPanelBtn");
+    const editIcon = document.getElementById("editIcon");
+    const photoInput = document.getElementById("photoInput");
+    const savePhotoButton = document.getElementById("savePhotoButton");
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+        console.error("ID пользователя не найден в localStorage.");
+        return;
+    }
+
+    // Открытие модального окна профиля
+    openModalBtn?.addEventListener("click", async () => {
+        const userData = await fetchUserData();
+        if (!userData) {
+            alert("Ошибка загрузки данных профиля.");
+            return;
+        }
+
+        // Обновляем данные в модальном окне
+        document.getElementById("userName").value = userData.username || "";
+        document.getElementById("userStatus").textContent = userData.role || "user";
+        document.getElementById("coursesCount").value = userData.coursesCompleted || 0;
+        document.getElementById("courseProgress").value = userData.progress || 0;
+
+        // Проверяем роль пользователя и показываем/скрываем кнопку админ-панели
+        const adminPanelContainer = document.getElementById("adminPanelContainer");
+        if (userData.role === "admin") {
+            adminPanelContainer.style.display = "block";
+        } else {
+            adminPanelContainer.style.display = "none";
+        }
+
+        // Обновляем фото профиля
+        const photoUrl = userData.photoUrl
+            ? `${userData.photoUrl}?t=${Date.now()}`
+            : "/uploads/default_photo.jpg";
+        document.getElementById("profilePhotoPreview").src = photoUrl;
+        document.querySelector("#openModalBtn img").src = photoUrl;
+
+        userModal.style.display = "block";
+    });
+
+    // Закрытие модального окна
+    closeModal?.addEventListener("click", () => {
+        userModal.style.display = "none";
+    });
+
+    // Переход на админ-панель
+    adminPanelBtn?.addEventListener("click", () => {
+        window.location.href = "admin.html";
+    });
+
+        // Редактирование фото профиля
+        editIcon?.addEventListener("click", () => {
+        photoInput.click(); // Имитируем клик по скрытому input type="file"
+    });
+
+    // Показ кнопки "Сохранить изменения" после выбора файла
+    photoInput?.addEventListener("change", () => {
+        if (photoInput.files.length > 0) {
+            // Показываем превью выбранного фото
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById("profilePhotoPreview").src = e.target.result;
+            };
+            reader.readAsDataURL(photoInput.files[0]);
+            
+            // Показываем кнопку сохранения
+            savePhotoButton.style.display = "block";
+        }
+    });
+
+    // Сохранение фото профиля
+    savePhotoButton?.addEventListener("click", async (e) => {
+        e.preventDefault(); // Предотвращаем отправку формы
+        if (photoInput.files.length === 0) {
+            alert("Пожалуйста, выберите файл.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("photo", photoInput.files[0]);
+
+        try {
+            const response = await fetch(`http://localhost:3700/api/user/${userId}`, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) throw new Error("Ошибка загрузки фото.");
+
+            const updatedUser = await response.json();
+            alert("Фото успешно обновлено!");
+
+            // Обновляем фото в профиле
+            const photoUrl = updatedUser.photoUrl
+                ? `${updatedUser.photoUrl}?t=${Date.now()}`
+                : "/uploads/default_photo.jpg";
+            document.getElementById("profilePhotoPreview").src = photoUrl;
+            document.querySelector("#openModalBtn img").src = photoUrl;
+
+            savePhotoButton.style.display = "none";
+        } catch (error) {
+            console.error("Ошибка при сохранении фото:", error);
+            alert("Ошибка при сохранении фото.");
+        }
+    });
+
+    // Функция для загрузки данных пользователя
+    async function fetchUserData() {
+        try {
+            const response = await fetch(`http://localhost:3700/api/user/${userId}`);
+            if (!response.ok) throw new Error("Ошибка загрузки профиля");
+            return await response.json();
+        } catch (error) {
+            console.error("Ошибка при загрузке данных профиля:", error);
+            return null;
+        }
+    }
+});
+        </script>
+          <!-- Скрипт для анимации цифр -->
+          <script>
+            document.addEventListener("DOMContentLoaded", function () { // Когда документ загружен
+                // Получаем все элементы с классом "counter"
+                const counters = document.querySelectorAll(".counter");
+            
+                counters.forEach(counter => { // Для каждого элемента
+                    let start = 0; // Начало анимации
+                    let end = parseInt(counter.dataset.target); // Конец анимации, важная часть автоматический определяет, до скольки будет идти пресчёт (анимация)
+                    let duration = 2000; // 2 секунды (время анимации, можно изменить)
+                    let interval = 20; // Интервал обновления (в миллисекундах)
+                    let step = (end - start) / (duration / interval); // Количество шагов (сколько раз будет обновляться значение)
+            
+                    let timer = setInterval(() => { // Запускаем таймер
+                        start += step; // Увеличиваем значение
+                        if (start > end) { // Если значение больше конечного
+                            start = end; // Устанавливаем его в конечное
+                        }
+                        // Если значение меньше нуля, устанавливаем его в ноль
+                        if (start < 0) {
+                            start = 0;
+                        }
+                        // Если значение больше конечного, останавливаем таймер
+                        if (start >= end) {
+                            start = end;
+                            clearInterval(timer);
+                        }
+                        counter.textContent = Math.floor(start); // Обновляем текст элемента
+                    }, interval); // Обновляем значение каждые 20 миллисекунд
+                });
+            });
+            </script>
+            
+          <!-- Скрипт для анимации текста -->
+            <script>
+              document.addEventListener("DOMContentLoaded", function () { // Когда документ загружен
+                  // Функция для анимации текста
+                  function typeEffect(element, speed) { // Элемент и скорость
+                      // Получаем текст из атрибута data-text
+                      // и устанавливаем его в пустую строку
+                      // (чтобы скрыть текст до начала анимации)
+                      let text = element.dataset.text; // Получаем текст
+                      let index = 0; // Индекс текущего символа
+                      element.textContent = ""; // Устанавливаем пустую строку
+                      
+                      function type() { // Функция для добавления символов
+                          if (index < text.length) { // Если индекс меньше длины текста
+                              element.textContent += text[index]; // Добавляем символ
+                              index++; // Увеличиваем индекс
+                              setTimeout(type, speed); // Запускаем следующую итерацию
+                          }
+                      }
+              
+                      type(); // Запускаем анимацию
+                  }
+              
+                  const typewriterElements = document.querySelectorAll(".typewriter"); // Получаем все элементы с классом typewriter
+                  typewriterElements.forEach(el => typeEffect(el, 100)); // скорость 100 мс
+              });
+              </script>
+              <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Проверяем, существует ли кнопка профиля
+    const openModalBtn = document.getElementById("openModalBtn");
+    const userModal = document.getElementById("userModal");
+    const closeModal = document.getElementById("closeModal");
+    const userId = localStorage.getItem("userId");
+
+    if (!openModalBtn) {
+      console.error("Кнопка профиля (openModalBtn) не найдена.");
+      return;
+    }
+
+    if (!userId) {
+      console.error("ID пользователя не найден в localStorage.");
+      return;
+    }
+
+    // Обработчик для открытия модального окна
+    openModalBtn.addEventListener("click", async () => {
+      console.log("Кнопка профиля нажата");
+
+      // Загружаем данные пользователя
+      const userData = await fetchUserData();
+      if (!userData) {
+        alert("Ошибка загрузки данных профиля.");
+        return;
+      }
+
+      // Обновляем данные в модальном окне
+      document.getElementById("userName").value = userData.username || "";
+      document.getElementById("userStatus").textContent = userData.role || "user";
+      document.getElementById("coursesCount").value = userData.coursesCompleted || 0;
+      document.getElementById("courseProgress").value = userData.progress || 0;
+
+      // Обновляем фото профиля
+      const photoUrl = userData.photoUrl
+        ? `${userData.photoUrl}?t=${Date.now()}`
+        : "/uploads/default_photo.jpg";
+      document.getElementById("profilePhotoPreview").src = photoUrl;
+      document.querySelector("#openModalBtn img").src = photoUrl;
+
+      // Показываем модальное окно
+      userModal.style.display = "block";
+    });
+
+    // Обработчик для закрытия модального окна
+    closeModal.addEventListener("click", () => {
+      userModal.style.display = "none";
+    });
+
+    // Функция для загрузки данных пользователя
+    async function fetchUserData() {
+      try {
+        const response = await fetch(`http://localhost:3700/api/user/${userId}`);
+        if (!response.ok) throw new Error("Ошибка загрузки профиля");
+        return await response.json();
+      } catch (error) {
+        console.error("Ошибка при загрузке данных профиля:", error);
+        return null;
+      }
+    }
+  });
+</script>
+
+     </body>
+</html>

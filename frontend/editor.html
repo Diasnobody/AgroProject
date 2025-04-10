@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Добавление курса</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="styles/globals.css">
+ <link rel="stylesheet" href="styles/patterns.css">
+
+  <!-- Подключаем TinyMCE через CDN с вашим API-ключом -->
+  <script src="https://cdn.tiny.cloud/1/2o38b7vmu5z0ljd24fz1ftaabog3nd09z1gmtfhr7ze780zu/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f47a20;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 50px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 1000px;
+      position: relative;
+    }
+    .title {
+      color: black;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+    }
+    input,
+    textarea {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      display: block;
+      margin: 20px auto 0;
+      padding: 12px 20px;
+      background: #f47a20;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #e67e22;
+    }
+  </style>
+
+</head>
+<body>
+    <div class="container">
+      <div class="title">Добавить курс</div>
+      <form id="courseForm">
+        <div class="input-group">
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="Название курса"
+            required
+          />
+          <input
+            type="text"
+            name="description"
+            id="description"
+            placeholder="Описание"
+            required
+          />
+        </div>
+        <textarea id="mytextarea">Введите контент курса...</textarea>
+        <button type="submit">Сохранить курс</button>
+      </form>
+    </div>
+
+  <script>
+    // Проверяем, загружен ли TinyMCE
+    if (typeof tinymce === "undefined") {
+        console.error("Ошибка: TinyMCE не загружен!");
+    }
+
+    // Инициализация TinyMCE
+    tinymce.init({
+        selector: '#mytextarea',
+        plugins: 'advlist autolink lists link image media file charmap print preview anchor',
+        toolbar: 'undo redo | formatselect | bold italic backcolor | link image media file | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        height: 400,
+        file_picker_types: 'file image media',
+        file_picker_callback: function (callback, value, meta) {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+
+            if (meta.filetype === 'image') {
+                input.setAttribute('accept', 'image/*');
+            } else if (meta.filetype === 'media') {
+                input.setAttribute('accept', 'video/*, audio/*');
+            } else {
+                input.setAttribute('accept', '.doc,.docx,.pdf,.ppt,.pptx,.xls,.xlsx,.txt');
+            }
+
+            input.onchange = function () {
+                const file = this.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('http://localhost:3700/api/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.location) {
+                        if (meta.filetype === 'image') {
+                            callback(data.location, { alt: file.name });
+                        } else {
+                            callback(data.location, { text: file.name, title: file.name });
+                        }
+                    } else {
+                        console.error('Ошибка загрузки файла:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке файла:', error);
+                });
+            };
+
+            input.click();
+        }
+    });
+
+    // Обработчик формы
+    document.getElementById('courseForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const content = tinymce.get('mytextarea').getContent();
+
+        if (!title || !description || !content) {
+            alert('Заполните все поля!');
+            return;
+        }
+
+        const formData = {
+            title,
+            description,
+            content
+        };
+
+        const response = await fetch('http://localhost:3700/api/admin/courses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        if (result.message) {
+            alert('Курс успешно сохранён!');
+            window.location.href = 'admin.html';  // Перенаправление в админку
+        } else {
+            alert('Ошибка сохранения: ' + result.error);
+        }
+    });
+  </script>
+
+  <script src="assets/js/editor.js"></script>
+</body>
+</html>
+<!-- frontend/editor.html -->
+ 
+
+

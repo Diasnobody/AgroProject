@@ -1,0 +1,160 @@
+<!-- frontend/courses.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Список курсов</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="styles/globals.css">
+  <link rel="stylesheet" href="styles/patterns.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f47a20;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      margin: 0;
+    }
+    .title {
+      color: #333;
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .courses {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .course-container {
+      transition: all 0.3s ease-in-out;
+      flex: 1 1 calc(25% - 15px);
+      max-width: calc(25% - 15px);
+      background: white;
+      border-radius: 10px;
+      box-sizing: border-box;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      min-width: 200px;
+    }
+    .course-container:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .course-card {
+      flex: 0 0 300px;
+    }
+    .course-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .course-card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .course-card p {
+      font-size: 16px;
+      color: gray;
+    }
+    .course-card button {
+      padding: 10px 15px;
+      background: #f47a20;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .course-card button:hover {
+      background: #e67e22;
+    }
+  </style>
+</head>
+<body>
+  <h1>Доступные курсы</h1>
+  <div id="coursesList"></div>
+  
+  <div id="courseContent" style="display: none;">
+    <h2 id="courseTitle"></h2>
+    <p id="courseDescription"></p>
+    <div id="courseFiles"></div>
+    <button id="backToListBtn">Назад к списку</button>
+  </div>
+  
+  <script>
+    // Функция загрузки списка курсов
+    async function loadCourses() {
+      const token = localStorage.getItem("token") || "";
+      const res = await fetch("http://localhost:3700/api/admin/courses", {
+        headers: { Authorization: token },
+      });
+      const data = await res.json();
+      const listDiv = document.getElementById("coursesList");
+      listDiv.className = "courses"; // Добавляем класс для стилизации
+
+      if (data.courses && data.courses.length > 0) {
+        listDiv.innerHTML = data.courses
+          .map(
+            (course) => `
+          <div class="course-container">
+            <h3>${course.title}</h3>
+            <p>${course.description}</p>
+            <button onclick="openCourse('${course._id}')">Открыть курс</button>
+          </div>
+          `
+          )
+          .join("");
+      } else {
+        listDiv.innerHTML = "<p>Нет курсов для отображения.</p>";
+      }
+    }
+
+    // Функция открытия курса
+    async function openCourse(courseId) {
+      const token = localStorage.getItem("token") || "";
+      const res = await fetch(
+        `http://localhost:3700/api/admin/courses/${courseId}`,
+        {
+          headers: { Authorization: token },
+        }
+      );
+      const data = await res.json();
+      if (data.course) {
+        // Открываем курс в новом окне с подробным контентом
+        const newWindow = window.open("", "_blank");
+        newWindow.document.write(`
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>${data.course.title}</title>
+          </head>
+          <body>
+            <h1>${data.course.title}</h1>
+            <p>${data.course.description}</p>
+            <div class="container">${data.course.content}</div>
+          </body>
+        </html>
+      `);
+      }
+    }
+
+    document.getElementById("backToListBtn").addEventListener("click", () => {
+      document.getElementById("courseContent").style.display = "none";
+      document.getElementById("coursesList").style.display = "block";
+    });
+
+    loadCourses();
+  </script>
+</body>
+</html>

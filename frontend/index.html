@@ -1,0 +1,50 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Авторизация</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="flex items-center justify-center min-h-screen bg-[#F47A20]">
+    <div
+      class="bg-[#f6f6f6] shadow-lg rounded-lg p-8 w-full max-w-md text-center"
+    >
+      <!-- Логотип -->
+      <img src="img/logo.png" alt="Логотип" class="mx-auto mb-4 w-24 h-auto" />
+
+      <h1 class="text-2xl font-bold text-center mb-6">Добро пожаловать</h1>
+
+      <!-- Форма регистрации -->
+  <div id="registration"></div>
+  <h2 class="text-xl font-semibold mb-2">Регистрация</h2>
+  <form id="registerForm" class="space-y-3">
+    <input type="text" name="username" placeholder="Имя пользователя" class="w-full p-2 border rounded" required>
+    <input type="password" name="password" placeholder="Пароль" class="w-full p-2 border rounded" required>
+    <!-- Для регистрации админа можно добавить чекбокс или отдельное поле -->
+    
+    <div class="flex items-center">
+    <label>
+      <input type="checkbox" name="isAdmin" class="mr-2"> Зарегистрировать как админа
+    </label>
+    </div>
+    <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Регистрация</button>
+  </form>
+  
+  <hr class="my-6 border-gray-300" />
+
+<!-- Форма входа -->
+<div id="login">
+  <h2 class="text-xl font-semibold mb-2">Вход</h2>
+  <form id="loginForm" class="space-y-3">
+    <input type="text" name="username" placeholder="Имя пользователя" class="w-full p-2 border rounded" required>
+    <input type="password" name="password" placeholder="Пароль" class="w-full p-2 border rounded" required>
+    <button type="submit" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">Войти</button>
+  </form>
+</div>
+
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

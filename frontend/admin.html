@@ -1,0 +1,430 @@
+<!-- frontend/admin.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Админ-панель</title>
+  <link rel="stylesheet" href="styles/globals.css">
+  <link rel="stylesheet" href="styles/patterns.css">
+  <script src="https://cdn.tiny.cloud/1/2o38b7vmu5z0ljd24fz1ftaabog3nd09z1gmtfhr7ze780zu/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background-color: #f47a20;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #c95604;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    
+  </style>
+</head>
+<body>
+  <h1>Админ-панель</h1>
+  
+  <!-- Вкладки для переключения между курсами и пользователями -->
+  <div class="tabs">
+    <button id="tabCourses">Курсы</button>
+    <button id="tabUsers">Пользователи</button>
+  </div>
+  
+  <!-- Вкладка Курсы -->
+  <div id="coursesTab">
+    <button id="createCourseBtn">Добавить новый курс</button>
+    <div id="coursesList">
+      <!-- Список курсов будет подгружаться сюда -->
+    </div>
+    
+    <!-- Форма редактирования курса -->
+    <div id="editCourseSection" style="display:none;">
+      <h2>Редактирование курса</h2>
+      <form id="editCourseForm">
+        <input type="hidden" name="courseId" id="editCourseId">
+        <input type="text" name="title" id="editCourseTitle" placeholder="Название курса" required>
+        <textarea name="description" id="editCourseDescription" placeholder="Описание курса"></textarea>
+        <!-- Поле для редактирования контента с TinyMCE -->
+        <textarea id="editCourseContent">Введите контент курса...</textarea>
+        <br>
+        <button type="submit">Сохранить изменения</button>
+        <button type="button" id="cancelEditCourse">Отмена</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Вкладка Пользователи -->
+  <div id="usersTab" style="display:none;">
+    <div id="usersList">
+      <!-- Список пользователей будет подгружаться сюда -->
+    </div>
+    
+    <!-- Форма редактирования пользователя -->
+    <div id="editUserSection" style="display:none;">
+      <h2>Редактирование пользователя</h2>
+      <form id="editUserForm">
+        <input type="hidden" name="userId" id="editUserId">
+        <input type="text" name="username" id="editUsername" placeholder="Логин" required>
+        <input type="password" name="password" id="editPassword" placeholder="Новый пароль (если требуется)">
+        <select name="role" id="editRole">
+          <option value="user">user</option>
+          <option value="admin">admin</option>
+        </select>
+        <br>
+        <button type="submit">Сохранить</button>
+        <button type="button" id="cancelEditUser">Отмена</button>
+      </form>
+    </div>
+  </div>
+  
+  <script src="assets/js/admin.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cancelEditCourseBtn = document.getElementById('cancelEditCourse');
+    const cancelEditUserBtn = document.getElementById('cancelEditUser');
+
+    if (cancelEditCourseBtn) {
+      cancelEditCourseBtn.addEventListener('click', () => {
+        document.getElementById('editCourseSection').style.display = 'none';
+      });
+    }
+
+    if (cancelEditUserBtn) {
+      cancelEditUserBtn.addEventListener('click', () => {
+        document.getElementById('editUserSection').style.display = 'none';
+      });
+    }
+
+    tinymce.init({
+      selector: '#editCourseContent',
+      plugins: 'advlist autolink lists link image media charmap print preview anchor',
+      toolbar: 'undo redo | formatselect | bold italic backcolor | link image media | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+      height: 400,
+      file_picker_types: 'file image media',
+      file_picker_callback: function (callback, value, meta) {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+
+        if (meta.filetype === 'image') {
+          input.setAttribute('accept', 'image/*');
+        } else if (meta.filetype === 'media') {
+          input.setAttribute('accept', 'video/*, audio/*');
+        } else {
+          input.setAttribute('accept', '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt');
+        }
+
+        input.onchange = function () {
+          const file = this.files[0];
+          const formData = new FormData();
+          formData.append('file', file);
+
+          fetch('http://localhost:3700/api/upload', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.location) {
+              if (meta.filetype === 'image') {
+                callback(data.location, { alt: file.name });
+              } else {
+                callback(data.location, { text: file.name, title: file.name });
+              }
+            } else {
+              console.error('Ошибка загрузки файла:', data);
+            }
+          })
+          .catch(error => {
+            console.error('Ошибка при загрузке файла:', error);
+          });
+        };
+
+        input.click();
+      }
+    });
+  });
+</script>
+
+  <script>
+  
+    // Переключение между вкладками
+    const tabCourses = document.getElementById('tabCourses');
+    const tabUsers = document.getElementById('tabUsers');
+    const coursesTab = document.getElementById('coursesTab');
+    const usersTab = document.getElementById('usersTab');
+    // Инициализация по умолчанию
+    coursesTab.style.display = 'block';
+    usersTab.style.display = 'none';
+    loadCourses();
+
+    tabCourses.addEventListener('click', () => {
+      coursesTab.style.display = 'block';
+      usersTab.style.display = 'none';
+      loadCourses();
+    });
+
+    tabUsers.addEventListener('click', () => {
+      coursesTab.style.display = 'none';
+      usersTab.style.display = 'block';
+      loadUsers();
+    });
+
+    // Функция загрузки курсов
+    async function loadCourses() {
+      const token = localStorage.getItem('token') || '';
+      const res = await fetch('http://localhost:3700/api/admin/courses', {
+        headers: { 'Authorization': token }
+      });
+      const data = await res.json();
+      const coursesListDiv = document.getElementById('coursesList');
+      if (data.courses) {
+        coursesListDiv.innerHTML = data.courses.map(course => `
+          <div class="course-item" style="border:1px solid #ccc; margin:5px; padding:5px;">
+            <h3>${course.title}</h3>
+            <p>${course.description}</p>
+            <button onclick="openCourse('${course._id}')">Открыть курс</button>
+            <button onclick="editCourse('${course._id}')">Редактировать курс</button>
+            <button onclick="deleteCourse('${course._id}')">❌ Удалить курс</button>
+          </div>
+        `).join('');
+      } else {
+        coursesListDiv.textContent = 'Нет курсов для отображения.';
+      }
+    }
+
+    // Функция загрузки пользователей
+    async function loadUsers() {
+      const token = localStorage.getItem('token') || '';
+      const res = await fetch('http://localhost:3700/api/admin/users', {
+        headers: { 'Authorization': token }
+      });
+      const data = await res.json();
+      const usersListDiv = document.getElementById('usersList');
+      if (data.users) {
+        usersListDiv.innerHTML = data.users.map(user => `
+          <div class="user-item" style="border:1px solid #ccc; margin:5px; padding:5px;">
+            <p><strong>Логин:</strong> ${user.username}</p>
+            <p><strong>Роль:</strong> ${user.role}</p>
+            <button onclick="editUser('${user._id}')">Редактировать пользователя</button>
+            <button onclick="deleteUser('${user._id}')">❌ Удалить</button>
+          </div>
+        `).join('');
+      } else {
+        usersListDiv.textContent = 'Нет пользователей для отображения.';
+      }
+    }
+
+    // Функция открытия курса для пользователя (открытие в новом окне)
+    async function openCourse(courseId) {
+      const token = localStorage.getItem('token') || '';
+      const res = await fetch(`http://localhost:3700/api/admin/courses/${courseId}`, {
+        headers: { 'Authorization': token }
+      });
+      const data = await res.json();
+      if (data.course) {
+        // Открываем курс в новом окне с подробным контентом
+        const newWindow = window.open('', '_blank');
+        newWindow.document.write(`
+          <html>
+            <head>
+              <meta charset="UTF-8">
+              <title>${data.course.title}</title>
+            </head>
+            <body>
+              <h1>${data.course.title}</h1>
+              <p>${data.course.description}</p>
+              <div>${data.course.content}</div>
+            </body>
+          </html>
+        `);
+      }
+    }
+
+    // Функция редактирования курса (админ)
+    async function editCourse(courseId) {
+      const token = localStorage.getItem('token') || '';
+      const res = await fetch(`http://localhost:3700/api/admin/courses/${courseId}`, {
+        headers: { 'Authorization': token }
+      });
+      const data = await res.json();
+      if (data.course) {
+        document.getElementById('editCourseId').value = data.course._id;
+        document.getElementById('editCourseTitle').value = data.course.title;
+        document.getElementById('editCourseDescription').value = data.course.description;
+        // Инициализация или обновление TinyMCE для редактирования контента
+        if (!tinymce.get('editCourseContent')) {
+          
+          tinymce.init({
+        selector: '#editCourseContent',
+        plugins: 'advlist autolink lists link image media file charmap print preview anchor',
+        toolbar: 'undo redo | formatselect | bold italic backcolor | link image media file | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        height: 400,
+        file_picker_types: 'file image media',
+        file_picker_callback: function (callback, value, meta) {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+
+            if (meta.filetype === 'image') {
+                input.setAttribute('accept', 'image/*');
+            } else if (meta.filetype === 'media') {
+                input.setAttribute('accept', 'video/*, audio/*');
+            } else {
+                input.setAttribute('accept', '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt');
+            }
+
+            input.onchange = function () {
+                const file = this.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('http://localhost:3700/api/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.location) {
+                        if (meta.filetype === 'image') {
+                            callback(data.location, { alt: file.name });
+                        } else {
+                            callback(data.location, { text: file.name, title: file.name });
+                        }
+                    } else {
+                        console.error('Ошибка загрузки файла:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке файла:', error);
+                });
+            };
+
+            input.click();
+            }
+          });
+        } else {
+          tinymce.get('editCourseContent').setContent(data.course.content || '');
+        }
+        document.getElementById('editCourseSection').style.display = 'block';
+      }
+    }
+
+    document.getElementById('cancelEditCourse').addEventListener('click', () => {
+      document.getElementById('editCourseSection').style.display = 'none';
+    });
+
+    // Функция редактирования пользователя
+    async function editUser(userId) {
+  try {
+    const token = localStorage.getItem('token') || '';
+    const res = await fetch(`http://localhost:3700/api/admin/users/${userId}`, {
+      headers: { 'Authorization': token }
+    });
+    
+    if (!res.ok) throw new Error('Ошибка сервера');
+    
+    const data = await res.json();
+    if (data.user) {
+      document.getElementById('editUserId').value = data.user._id;
+      document.getElementById('editUsername').value = data.user.username;
+      document.getElementById('editRole').value = data.user.role;
+      document.getElementById('editUserSection').style.display = 'block';
+    }
+  } catch (error) {
+    console.error('Ошибка при редактировании пользователя:', error);
+    alert('Не удалось загрузить данные пользователя');
+  }
+}
+
+
+    document.getElementById('cancelEditUser').addEventListener('click', () => {
+      document.getElementById('editUserSection').style.display = 'none';
+    });
+
+    // Обработчик формы редактирования курса
+    document.getElementById('editCourseForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem('token') || '';
+      const courseId = document.getElementById('editCourseId').value;
+      const title = document.getElementById('editCourseTitle').value;
+      const description = document.getElementById('editCourseDescription').value;
+      const content = tinymce.get('editCourseContent').getContent();
+      const res = await fetch(`http://localhost:3700/api/admin/courses/${courseId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({ title, description, content })
+      });
+      const data = await res.json();
+      if (data.message) {
+        alert('Курс обновлен!');
+        document.getElementById('editCourseSection').style.display = 'none';
+        loadCourses();
+      } else {
+        alert('Ошибка обновления: ' + (data.error || 'Неизвестно'));
+      }
+      
+    });
+
+    // Обработчик формы редактирования пользователя
+    document.getElementById('editUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem('token') || '';
+      const userId = document.getElementById('editUserId').value;
+      const username = document.getElementById('editUsername').value;
+      const password = document.getElementById('editPassword').value;
+      const role = document.getElementById('editRole').value;
+      const res = await fetch(`http://localhost:3700/api/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({ 
+          username, 
+        ...(password && { password }), // Отправляем пароль только если он указан
+        role  
+      })
+      });
+      const data = await res.json();
+      if (data.message) {
+        alert('Пользователь обновлен!');
+        document.getElementById('editUserSection').style.display = 'none';
+        document.getElementById('editPassword').value = ''; // Очищаем поле пароля
+        loadUsers();
+      } else {
+        alert('Ошибка: ' + (data.error || 'Неизвестно'));
+      }
+    });
+  </script>
+</body>
+</html>
