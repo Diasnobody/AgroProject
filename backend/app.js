@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 });
 
 // Подключение к MongoDB (укажите ваш connection string)
-mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://san4ez877:san4ez877@cluster0.fflk2.mongodb.net/san4ez?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB подключен'))
   .catch(err => console.error('Ошибка подключения к MongoDB', err));
 

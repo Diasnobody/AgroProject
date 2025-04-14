@@ -5,52 +5,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Админ-панель</title>
+  <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="styles/globals.css">
   <link rel="stylesheet" href="styles/patterns.css">
   <script src="https://cdn.tiny.cloud/1/2o38b7vmu5z0ljd24fz1ftaabog3nd09z1gmtfhr7ze780zu/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      padding: 20px;
-    }
 
-    h1 {
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .button-container {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      background-color: #f47a20;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease-in-out, transform 0.2s;
-    }
-
-    button:hover {
-      background-color: #c95604;
-      transform: scale(1.05);
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-    
-    
-  </style>
 </head>
 <body>
+  <div class="header">
+    <img src="img/logo.png" alt="Логотип">
   <h1>Админ-панель</h1>
   
   <!-- Вкладки для переключения между курсами и пользователями -->
@@ -58,7 +21,41 @@
     <button id="tabCourses">Курсы</button>
     <button id="tabUsers">Пользователи</button>
   </div>
+  <div class="vertical-menu">
+    <button class="menu-button" title="Главная">
+      <img src="path/to/home-icon.png" alt="Главная">
+    </button>
+    <button class="menu-button" title="Сохранить">
+      <img src="path/to/save-icon.png" alt="Сохранить">
+    </button>
+    <button class="menu-button" title="Календарь">
+      <img src="path/to/calendar-icon.png" alt="Календарь">
+    </button>
+    <button class="menu-button" title="Пользователи">
+      <img src="path/to/users-icon.png" alt="Пользователи">
+    </button>
+    <button class="menu-button" title="Статистика">
+      <img src="path/to/stats-icon.png" alt="Статистика">
+    </button>
+    <button class="menu-button" title="Информация">
+      <img src="path/to/info-icon.png" alt="Информация">
+    </button>
+    <button class="menu-button" title="Вопросы">
+      <img src="path/to/question-icon.png" alt="Вопросы">
+    </button>
+    <button class="menu-button" title="Настройки">
+      <img src="path/to/settings-icon.png" alt="Настройки">
+    </button>
+    <button class="menu-button" title="Настройки">
+      <img src="path/to/settings-icon.png" alt="Настройки">
+    </button>
+    <button class="menu-button" title="Настройки">
+      <img src="path/to/settings-icon.png" alt="Настройки">
+    </button>
+  </div>
+  <!-- центральные кнопки для материалов пользоватилей и тд -->
   
+  </div>
   <!-- Вкладка Курсы -->
   <div id="coursesTab">
     <button id="createCourseBtn">Добавить новый курс</button>
@@ -105,7 +102,26 @@
       </form>
     </div>
   </div>
-  
+  <div class="center-menu-wrapper">
+    <div class="center-menu">
+      <div class="center-menu-item" title="Материалы">
+        <img src="img/lamp.png" alt="Материалы">
+        <p>Материалы</p>
+      </div>
+      <div class="center-menu-item" title="Пользователи">
+        <img src="path/to/users-icon.png" alt="Пользователи">
+        <p>Пользователи</p>
+      </div>
+      <div class="center-menu-item" title="Группы">
+        <img src="path/to/groups-icon.png" alt="Группы">
+        <p>Группы</p>
+      </div>
+      <div class="center-menu-item" title="Период">
+        <img src="path/to/period-icon.png" alt="Период">
+        <p>Период</p>
+      </div>
+    </div>
+  </div>
   <script src="assets/js/admin.js"></script>
   <script>
   document.addEventListener('DOMContentLoaded', () => {
