@@ -1176,3 +1176,312 @@ ul li {
   color: #555; /* Цвет текста */
   line-height: 1; /* Межстрочный интервал */
 }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+button {
+  background-color: #f47a20;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+button:hover {
+  background-color: #c95604;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+  gap: 20px; 
+}
+
+.header img {
+  height: 40px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Расстояние между элементами */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 15px; /* Расстояние между ссылками */
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #f47a20;
+}
+
+#openModalBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  top: -20px; /* Расположение сверху */
+  right: -70px;
+}
+
+#openModalBtn img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ffa500;
+  object-fit: cover;
+}
+
+/* Стили для модального окна профиля */
+#userModal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-profile {
+  background: #fff;
+  border: 2px solid #ffa500;
+  margin: 60px auto;
+  padding: 30px;
+  width: 350px;
+  border-radius: 10px;
+  position: relative;
+}
+#imageButton {
+  position: absolute; /* Абсолютное позиционирование */
+  top: 90px; /* Расстояние от верхнего края */
+  right: 1800px; /* Расстояние от правого края */
+  background-color: #f47a20; /* Оранжевый фон */
+  border: none; /* Убираем границу кнопки */
+  cursor: pointer; /* Указываем, что это кнопка */
+  padding: 10px; /* Внутренние отступы */
+  border-radius: 5px; /* Закругленные углы */
+  transition: background 0.3s ease-in-out, transform 0.2s; /* Анимация */
+}
+
+#imageButton img {
+  width: 50px; /* Ширина изображения */
+  height: 50px; /* Высота изображения */
+  border-radius: 50%; /* Делаем изображение круглым */
+  object-fit: cover; /* Устанавливаем обрезку изображения */
+}
+.vertical-menu {
+  display: flex;
+  flex-direction: column; /* Располагаем кнопки вертикально */
+  align-items: flex-start; /* Выравниваем кнопки по левому краю */
+  gap: 10px; /* Расстояние между кнопками */
+  background-color: #f4f4f4; /* Фон меню */
+  padding: 10px; /* Внутренние отступы */
+  border-radius: 10px; /* Закругленные углы */
+  width: 60px; /* Ширина меню */
+  position: absolute; /* Абсолютное позиционирование */
+  left: 10px; /* Расстояние от левого края */
+  top: 100px; /* Расстояние от верхнего края */
+}
+
+.menu-button {
+  background: none; /* Убираем фон кнопки */
+  border: none; /* Убираем границу */
+  cursor: pointer; /* Указываем, что это кнопка */
+  padding: 5px; /* Внутренние отступы */
+  transition: transform 0.2s ease; /* Анимация при наведении */
+}
+
+.menu-button img {
+  width: 30px; /* Размер иконки */
+  height: 30px; /* Размер иконки */
+  object-fit: cover; /* Устанавливаем обрезку изображения */
+}
+
+.menu-button:hover {
+  transform: scale(1.1); /* Увеличение кнопки при наведении */
+}
+.center-menu-item {
+  display: flex;
+  flex-direction: row; /* Располагаем текст справа от иконки */
+  justify-content: flex-start; /* Выравниваем содержимое по левому краю */
+  align-items: center; /* Центрируем содержимое по вертикали */
+  background-color: #fff; /* Белый фон для кнопки */
+  border-radius: 10px; /* Закругленные углы */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Мягкая тень */
+  padding: 15px; /* Внутренние отступы */
+  width: 250px; /* Ширина кнопки */
+  height: 120px; /* Высота кнопки */
+  text-align: left; /* Выравниваем текст по левому краю */
+  gap: 20px; /* Расстояние между иконкой и текстом */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Анимация при наведении */
+  margin: 20px 20px; /* Отступы слева и справа */
+}
+
+.center-menu-item:hover {
+  transform: translateY(-5px); /* Поднимаем кнопку при наведении */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Увеличиваем тень при наведении */
+}
+
+.center-menu-item img {
+  width: 60px; /* Размер иконки */
+  height: 50px; /* Размер иконки */
+  margin-bottom: 10px; /* Отступ между иконкой и текстом */
+}
+
+.center-menu-item p {
+  margin: 0;
+  font-size: 14px; /* Размер текста */
+  color: #333; /* Цвет текста */
+  font-weight: bold; /* Жирный текст */
+}
+.center-menu {
+  display: flex;
+  justify-content: center; /* Центрируем элементы по горизонтали */
+  align-items: center; /* Центрируем элементы по вертикали */
+  gap: 20px; /* Расстояние между элементами */
+}
+#coursesTab {
+  display: flex;
+  flex-direction: column; /* Располагаем элементы вертикально */
+  align-items: flex-start; /* Выравниваем элементы по левому краю */
+  gap: 10px; /* Расстояние между элементами */
+}
+
+#coursesTab #createCourseBtn {
+  position: absolute;
+  margin: 10px 0; /* Отступы сверху и снизу */
+  top: 29px;
+  right: 300px; /* Расстояние от правого края */
+  padding: 10px 20px;
+  background-color: #f47a20; /* Цвет фона кнопки */
+  color: white; /* Цвет текста */
+  border: none; /* Убираем границу */
+  border-radius: 5px; /* Закругленные углы */
+  cursor: pointer; /* Указываем, что это кнопка */
+  transition: background 0.3s ease; /* Анимация при наведении */
+}
+
+#coursesTab #createCourseBtn:hover {
+  background-color: #c95604; /* Темно-оранжевый при наведении */
+}
+.task-section {
+  background-color: #fff; /* Белый фон секции */
+  border-radius: 10px; /* Закругленные углы */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Мягкая тень */
+  padding: 20px; /* Внутренние отступы */
+  margin-bottom: 20px; /* Отступ между секциями */
+  width: 1800px; /* Фиксированная ширина */
+  margin-left: auto; /* Центрируем секцию по горизонтали */
+}
+
+.task-header {
+  display: flex; /* Горизонтальное расположение */
+  justify-content: space-between; /* Распределяем элементы по краям */
+  align-items: center; /* Центрируем элементы по вертикали */
+  margin-bottom: 10px; /* Отступ снизу */
+  width:auto; /* Фиксированная ширина */
+}
+
+.task-header h3 {
+  font-size: 1.25rem; /* Размер заголовка */
+  font-weight: bold; /* Жирный текст */
+  margin: 0; /* Убираем отступы */
+  
+}
+
+.task-controls {
+  display: flex; /* Горизонтальное расположение кнопок */
+  gap: 10px; /* Расстояние между кнопками */
+}
+
+.task-controls button {
+  background-color: #f4f4f4; /* Светлый фон кнопки */
+  border: 1px solid #ccc; /* Граница кнопки */
+  border-radius: 5px; /* Закругленные углы */
+  padding: 5px 10px; /* Внутренние отступы */
+  font-size: 0.9rem; /* Размер текста */
+  cursor: pointer; /* Указываем, что это кнопка */
+  transition: background 0.3s ease; /* Анимация при наведении */
+  width: auto; /* Фиксированная ширина кнопки */
+  height: auto; /* Убираем фиксированную высоту */
+  white-space: nowrap; /* Запрещаем перенос текста */
+  overflow: hidden; /* Убираем переполнение */
+  text-overflow: ellipsis; /* Добавляем многоточие, если текст не помещается */
+  color: #000000;
+}
+
+.task-controls button:hover {
+  background-color: #e0e0e0; /* Цвет кнопки при наведении */
+}
+
+.task-content {
+  border-top: 1px solid #141414; /* Разделительная линия */
+  padding-top: 10px; /* Отступ сверху */
+  font-size: 0.9rem; /* Размер текста */
+  color: #000000; /* Цвет текста */
+  text-align: center; /* Центрируем текст */
+}
+.center-content {
+  margin-left: 250px; /* Отступ для левой панели */
+  margin-top: 60px; /* Отступ для верхней панели */
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: calc(100vh - 60px); /* Высота с учётом верхней панели */
+}
+#centerContent {
+  margin-left: 50px; /* Отступ для левой панели */
+  margin-top: 10px; /* Отступ для верхней панели */
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: calc(100vh - 60px); /* Высота с учётом верхней панели */
+}
