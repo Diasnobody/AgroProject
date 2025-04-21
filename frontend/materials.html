@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Учебные материалы</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      background-color: #fff5eb;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: #ffffff;
+      box-shadow: 2px 0 8px rgba(255, 160, 0, 0.1);
+      padding: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #ff8c00;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: #666;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar li:hover {
+      background-color: #fff5eb;
+      color: #ff8c00;
+    }
+
+    .project-item {
+      background-color: #ffe4bc;
+      padding: 12px;
+      border-radius: 8px;
+      color: #ff8c00;
+      font-weight: 500;
+      transition: transform 0.2s ease;
+    }
+
+    .project-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 8px rgba(255, 140, 0, 0.2);
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 32px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      color: #ff8c00;
+      font-weight: 600;
+    }
+
+    .actions button {
+      margin-left: 12px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-upload {
+      background-color: #fff5eb;
+      color: #666;
+    }
+
+    .btn-upload:hover {
+      background-color: #ffe4bc;
+    }
+
+    .btn-create {
+      background-color: #ff8c00;
+      color: white;
+    }
+
+    .btn-create:hover {
+      background-color: #ff7000;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+    }
+
+    .materials-table {
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(255, 140, 0, 0.1);
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .materials-table th {
+      background-color: #fff5eb;
+      padding: 12px;
+      text-align: left;
+      color: #ff8c00;
+      font-weight: 600;
+      border-bottom: 2px solid #ffe4bc;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .materials-table th:hover {
+      background-color: #ffe4bc;
+    }
+
+    .materials-table td {
+      padding: 12px;
+      border-bottom: 1px solid #ffe4bc;
+      color: #666;
+    }
+
+    .materials-table tr:hover {
+      background-color: #fff5eb;
+    }
+
+    .sort-icon::after {
+      content: '↕️';
+      margin-left: 5px;
+      font-size: 12px;
+    }
+
+    .sort-asc::after {
+      content: '↑';
+    }
+
+    .sort-desc::after {
+      content: '↓';
+    }
+
+    .file-instructions {
+      margin-top: 30px;
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(255, 140, 0, 0.1);
+    }
+
+    .file-instructions .main-text {
+      font-size: 18px;
+      color: #ff8c00;
+      margin-bottom: 10px;
+    }
+
+    .file-instructions .sub-text {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .file-instructions .formats {
+      color: #90a4ae;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="logo">
+    <img src="img\logo.png" alt="logo" width="40">
+    <h2>Учебные материалы</h2>
+  </div>
+  <ul>
+    <li>Недавние</li>
+    <li>Избранное</li>
+    <li>Доступные мне</li>
+    <li>Библиотека курсов</li>
+    <li>Корзина</li>
+  </ul>
+
+  <div class="projects">
+    <h3>Проекты</h3>
+    <div class="project-item">Новый проект (Имя)</div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+  <div class="header">
+    <h1>Новый проект (Имя)</h1>
+    <div class="actions">
+      <button class="btn-upload">Загрузить</button>
+      <button class="btn-create">Создать</button>
+    </div>
+  </div>
+
+  <table class="materials-table">
+    <thead>
+      <tr>
+        <th class="sort-icon" data-column="name">Название</th>
+        <th class="sort-icon" data-column="type">Тип</th>
+        <th class="sort-icon" data-column="purpose">Назначение</th>
+        <th class="sort-icon" data-column="author">Автор</th>
+        <th class="sort-icon" data-column="date">Дата добавления</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Агрономия основы</td>
+        <td>PDF</td>
+        <td>Обучение</td>
+        <td>Иванов И.И.</td>
+        <td>2024-01-15</td>
+      </tr>
+      <tr>
+        <td>Видеоурок по посеву</td>
+        <td>MP4</td>
+        <td>Практика</td>
+        <td>Петров П.П.</td>
+        <td>2024-01-14</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="file-instructions">
+    <p class="main-text">Добавьте учебные материалы</p>
+    <p class="sub-text">Создайте, загрузите или перетащите сюда материалы</p>
+    <p class="formats">Форматы: ppt, pptx, pdf, mp4, mp3, ismpkg, isqmpkg, issmpkg, zip, flv, mov, doc, docx, xls, xlsx.</p>
+  </div>
+
+  <script>
+    document.querySelectorAll('.materials-table th').forEach(header => {
+      let currentSort = 'none'; // three states: 'none', 'asc', 'desc'
+
+      header.addEventListener('click', () => {
+        const column = header.dataset.column;
+        const tbody = header.closest('table').querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        // Remove sort classes from other headers
+        document.querySelectorAll('th').forEach(th => {
+          if (th !== header) {
+            th.classList.remove('sort-asc', 'sort-desc');
+          }
+        });
+
+        // Toggle sort states
+        if (currentSort === 'none' || currentSort === 'desc') {
+          currentSort = 'asc';
+          header.classList.remove('sort-desc');
+          header.classList.add('sort-asc');
+        } else {
+          currentSort = 'desc';
+          header.classList.remove('sort-asc');
+          header.classList.add('sort-desc');
+        }
+
+        // Sort rows
+        rows.sort((a, b) => {
+          const aValue = a.children[Array.from(header.parentNode.children).indexOf(header)].textContent;
+          const bValue = b.children[Array.from(header.parentNode.children).indexOf(header)].textContent;
+          return currentSort === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        });
+
+        // Update table
+        tbody.innerHTML = '';
+        rows.forEach(row => tbody.appendChild(row));
+      });
+    });
+  </script>
+</div>
+
+</body>
+</html>

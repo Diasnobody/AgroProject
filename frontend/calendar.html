@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Мероприятия</title>
+  <link href="img\logo.png" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: white;
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .calendar-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .calendar-controls {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .filter-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .filter-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      padding: 10px;
+      z-index: 1000;
+      border-radius: 4px;
+      top: 100%;
+      left: 0;
+      margin-top: 5px;
+    }
+    .filter-content.show {
+      display: block;
+    }
+    .filter-btn {
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .add-event-btn {
+      background-color: #ffa000;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .search-box {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 200px;
+    }
+    .filter-item {
+      padding: 5px 0;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="img\logo.png" alt="Логотип">
+    <strong>АО «АЛЕЛЬ АГРО»</strong>
+  </div>
+</header>
+
+<div class="content">
+  <div class="calendar-container">
+    <div class="calendar-controls">
+      <input type="text" class="search-box" placeholder="Поиск мероприятий..." id="searchInput">
+      <div class="filter-dropdown">
+        <button class="filter-btn">Тип мероприятия</button>
+        <div class="filter-content">
+          <label class="filter-item">
+            <input type="checkbox" id="checkAll"> Отметить все
+          </label>
+          <label class="filter-item">
+            <input type="checkbox" class="event-type" value="seminar"> Семинар
+          </label>
+          <label class="filter-item">
+            <input type="checkbox" class="event-type" value="webinar"> Вебинар
+          </label>
+          <label class="filter-item">
+            <input type="checkbox" class="event-type" value="training"> Тренинг
+          </label>
+        </div>
+      </div>
+      <button class="add-event-btn">Добавить мероприятие</button>
+    </div>
+    <div id="calendar"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const searchInput = document.getElementById('searchInput');
+    const filterBtn = document.querySelector('.filter-btn');
+    const filterContent = document.querySelector('.filter-content');
+    const checkAll = document.getElementById('checkAll');
+    const eventTypeCheckboxes = document.querySelectorAll('.event-type');
+    
+    const allEvents = [
+      { title: 'Семинар по птицеводству', start: '2025-05-15', type: 'seminar' },
+      { title: 'Вебинар: Новые технологии', start: '2025-05-20', type: 'webinar' },
+      { title: 'Тренинг персонала', start: '2025-05-25', type: 'training' }
+    ];
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'ru',
+      headerToolbar: {
+        left: 'prev,next',
+        center: 'title',
+        right: 'dayGridMonth,listMonth'
+      },
+      events: allEvents
+    });
+
+    filterBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      filterContent.classList.toggle('show');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!filterContent.contains(e.target) && !filterBtn.contains(e.target)) {
+        filterContent.classList.remove('show');
+      }
+    });
+
+    function updateEvents() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const selectedTypes = Array.from(eventTypeCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+      const filteredEvents = allEvents.filter(event => {
+        const matchesSearch = event.title.toLowerCase().includes(searchTerm);
+        const matchesType = selectedTypes.length === 0 || selectedTypes.includes(event.type);
+        return matchesSearch && matchesType;
+      });
+
+      calendar.removeAllEvents();
+      calendar.addEventSource(filteredEvents);
+    }
+
+    searchInput.addEventListener('input', updateEvents);
+    eventTypeCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateEvents);
+    });
+
+    checkAll.addEventListener('change', function() {
+      eventTypeCheckboxes.forEach(cb => cb.checked = this.checked);
+      updateEvents();
+    });
+
+    calendar.render();
+  });
+</script>
+
+</body>
+</html>
