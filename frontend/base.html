@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>База знаний</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { display: flex; height: 100vh; background: #fff; }
+
+    .sidebar {
+      width: 260px;
+      background: #f9f9f9;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+    }
+
+    .sidebar button {
+      background: #ffa000;
+      color: #fff;
+      border: none;
+      padding: 12px 16px;
+      width: 100%;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-bottom: 25px;
+      cursor: pointer;
+    }
+
+    .sidebar input {
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .menu-item:hover {
+      text-decoration: underline;
+    }
+
+    .spaces-title {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 40px;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .main h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: #f1f1f1;
+      border-radius: 30px;
+      padding: 8px 16px;
+      width: 400px;
+      margin-bottom: 30px;
+    }
+
+    .search-bar input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      padding: 8px;
+      outline: none;
+    }
+
+    .spaces {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .space-box {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 40px 20px;
+      text-align: center;
+      color: #555;
+      width: 240px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .space-box:hover {
+      background-color: #f0f0f0;
+    }
+
+    .space-item {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      width: 240px;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .space-item button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: red;
+    }
+
+    .restore-btn {
+      color: green;
+      margin-top: 10px;
+      cursor: pointer;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button onclick="createSpace()">+ Создать</button>
+    <input type="text" placeholder="Поиск" oninput="renderSpaces(this.value)" />
+    <div class="menu-item" onclick="renderSpaces()">📊 Обзор</div>
+    <div class="menu-item" onclick="showRecent()">🕓 Недавние</div>
+    <div class="menu-item" onclick="showTrash()">🗑️ Корзина</div>
+    <div class="spaces-title">ПРОСТРАНСТВА</div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <h1>База знаний</h1>
+    <div class="search-bar">
+      <input type="text" placeholder="Напишите вопрос или название статьи" />
+      <kbd style="margin-left: 10px; background:#eaeaea; padding: 2px 6px; border-radius: 4px;">Ctrl</kbd>
+      <kbd style="margin-left: 4px; background:#eaeaea; padding: 2px 6px; border-radius: 4px;">K</kbd>
+    </div>
+    <div class="spaces" id="spacesContainer"></div>
+  </div>
+
+<script>
+  let spaces = JSON.parse(localStorage.getItem('spaces') || '[]');
+  let trash = JSON.parse(localStorage.getItem('trash') || '[]');
+  let recent = JSON.parse(localStorage.getItem('recent') || '[]');
+
+  function saveAll() {
+    localStorage.setItem('spaces', JSON.stringify(spaces));
+    localStorage.setItem('trash', JSON.stringify(trash));
+    localStorage.setItem('recent', JSON.stringify(recent));
+  }
+
+  function createSpace() {
+    const name = prompt('Введите название пространства:');
+    if (name) {
+      const newSpace = {
+        id: Date.now(),
+        name,
+        created: new Date(),
+      };
+      spaces.push(newSpace);
+      recent.push({ ...newSpace, accessed: new Date() });
+      saveAll();
+      renderSpaces();
+    }
+  }
+
+  function deleteSpace(id) {
+    const index = spaces.findIndex(s => s.id === id);
+    if (index !== -1) {
+      const deleted = { ...spaces[index], deletedAt: Date.now() };
+      trash.push(deleted);
+      spaces.splice(index, 1);
+      saveAll();
+      renderSpaces();
+    }
+  }
+
+  function restoreSpace(id) {
+    const index = trash.findIndex(s => s.id === id);
+    if (index !== -1) {
+      const restored = trash[index];
+      delete restored.deletedAt;
+      spaces.push(restored);
+      trash.splice(index, 1);
+      saveAll();
+      renderSpaces();
+    }
+  }
+
+  function renderSpaces(search = '') {
+    document.querySelector('h1').innerText = 'База знаний';
+    const container = document.getElementById('spacesContainer');
+    container.innerHTML = '';
+
+    const filtered = spaces.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="space-box" onclick="createSpace()">
+        <div style="font-size: 30px;">+</div><span>Создать пространство</span>
+      </div>`;
+      return;
+    }
+
+    filtered.forEach(space => {
+      const div = document.createElement('div');
+      div.className = 'space-item';
+      div.innerHTML = `<strong>${space.name}</strong><br><small>${new Date(space.created).toLocaleDateString()}</small>
+        <button onclick="deleteSpace(${space.id})">✖</button>`;
+      container.appendChild(div);
+    });
+  }
+
+  function showRecent() {
+    document.querySelector('h1').innerText = 'Недавние пространства';
+    const container = document.getElementById('spacesContainer');
+    container.innerHTML = '';
+    const list = recent.slice(-5).reverse();
+
+    if (list.length === 0) {
+      container.innerHTML = '<p>Нет недавних пространств.</p>';
+      return;
+    }
+
+    list.forEach(space => {
+      const div = document.createElement('div');
+      div.className = 'space-item';
+      div.innerHTML = `<strong>${space.name}</strong><br><small>Открыто: ${new Date(space.accessed).toLocaleDateString()}</small>`;
+      container.appendChild(div);
+    });
+  }
+
+  function showTrash() {
+    document.querySelector('h1').innerText = 'Корзина';
+    const container = document.getElementById('spacesContainer');
+    container.innerHTML = '';
+    const now = Date.now();
+
+    trash = trash.filter(item => now - item.deletedAt < 30 * 24 * 60 * 60 * 1000); // 30 дней
+    saveAll();
+
+    if (trash.length === 0) {
+      container.innerHTML = '<p>Корзина пуста.</p>';
+      return;
+    }
+
+    trash.forEach(space => {
+      const div = document.createElement('div');
+      div.className = 'space-item';
+      div.innerHTML = `<strong>${space.name}</strong><br><small>Удалено: ${new Date(space.deletedAt).toLocaleDateString()}</small>
+        <div class="restore-btn" onclick="restoreSpace(${space.id})">♻️ Восстановить</div>`;
+      container.appendChild(div);
+    });
+  }
+
+  // Первичная отрисовка
+  renderSpaces();
+</script>
+
+</body>
+</html>
